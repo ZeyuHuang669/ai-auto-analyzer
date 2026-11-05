@@ -6,6 +6,7 @@ Markdown 是唯一内容源：改 blog.md 后重跑本脚本即可，docx 会跟
 from __future__ import annotations
 
 import re
+import sys
 from datetime import date
 from pathlib import Path
 
@@ -273,8 +274,8 @@ def render_table(doc: Document, rows: list[list[str]]):
     doc.add_paragraph().paragraph_format.space_after = Pt(4)
 
 
-def build():
-    text = SOURCE.read_text(encoding="utf-8")
+def build(source: Path = SOURCE, output: Path = OUTPUT):
+    text = source.read_text(encoding="utf-8")
     blocks = parse_blocks(text)
 
     plain = re.sub(r"[#>*`\-|!\[\]()]", "", text)
@@ -385,7 +386,7 @@ def build():
 
         if kind == "image":
             alt, src = payload
-            path = (SOURCE.parent / src).resolve()
+            path = (source.parent / src).resolve()
             p = doc.add_paragraph()
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p.paragraph_format.space_before = Pt(10)
@@ -428,10 +429,12 @@ def build():
             set_run(run, font=HEAD_FONT, size=11, color=MUTED)
             continue
 
-    doc.save(OUTPUT)
-    print(f"已生成：{OUTPUT}")
+    doc.save(output)
+    print(f"已生成：{output}")
     print(f"字数约 {char_count}，阅读约 {minutes} 分钟")
 
 
 if __name__ == "__main__":
-    build()
+    src = Path(sys.argv[1]) if len(sys.argv) > 1 else SOURCE
+    dst = Path(sys.argv[2]) if len(sys.argv) > 2 else OUTPUT
+    build(src, dst)
