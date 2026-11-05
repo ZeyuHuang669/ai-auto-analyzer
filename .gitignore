@@ -1,0 +1,28 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# ---- Secrets ----
+.env
+.env.local
+front/.streamlit/secrets.toml
+
+# ---- Runtime data ----
+data/app.db
+data/*.db-journal
+data/uploads/
+data/reports/
+
+# ---- IDE / OS ----
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ---- Temp ----
+.dsh-office-*/
+*.log
